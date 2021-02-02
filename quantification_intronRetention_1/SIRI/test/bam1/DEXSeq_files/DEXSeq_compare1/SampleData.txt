@@ -1,0 +1,5 @@
+	condition	libType
+sample1_0	SAMPLE1	paired-end
+sample1_1	SAMPLE1	paired-end
+sample2_0	SAMPLE2	paired-end
+sample2_1	SAMPLE2	paired-end
