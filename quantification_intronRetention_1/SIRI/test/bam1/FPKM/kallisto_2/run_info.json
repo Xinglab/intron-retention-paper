@@ -1,9 +1,0 @@
-{
-	"n_targets": 62,
-	"n_bootstraps": 0,
-	"n_processed": 6520,
-	"kallisto_version": "0.43.0",
-	"index_version": 10,
-	"start_time": "Mon Sep 30 12:54:38 2019",
-	"call": "kallisto quant --index=./kallisto/test --output-dir=./bam1/FPKM/kallisto_2 --threads=1 --plaintext ./bam1/fq/sample_2_1.fq ./bam1/fq/sample_2_2.fq"
-}

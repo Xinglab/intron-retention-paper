@@ -3,6 +3,7 @@ from subprocess import *
 
 TARGET_DIR = '/path/to/directory/' # the directory of storing the results of star mapping, kallisto and intron retention quantification
 SIRI_cmd = os.path.abspath(__file__) + '/SIRI/bin/SIRI'
+## For more about SIRI, please refer to https://github.com/Xinglab/siri
 
 def makedirs(_dir):
     try:
