@@ -1,4 +1,7 @@
-The purpose of this code is to provide the hyperparameters used in the deep learning model
-and how to construct the deep learning model. 
+Please unzip mm10.fa.gz first in data folder.
 
-The example data X.npy and y.npy are used to run the script as a prototype.
+The deep learning part is included in the code. 
+The code has three functions listed below:
+1. generate training data
+2. train deep learning model
+3. evaluate the prediction

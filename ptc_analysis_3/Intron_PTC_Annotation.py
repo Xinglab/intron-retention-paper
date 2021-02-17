@@ -2,9 +2,17 @@ from pysam import FastaFile
 import re
 from tqdm import tqdm
 import string
+import os
+from collections import defaultdict
 
-MM10_FASTQ = 'mm10.fa'
-MOUSE_GTF = 'Mus_musculus.GRCm38.91.chr.gtf'
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__)) + '/'
+DATA_DIR = os.path.join(CURRENT_DIR, '..', 'data/')
+
+MM10_FASTQ = DATA_DIR + 'mm10.fa'
+MOUSE_GTF = DATA_DIR + 'Mus_musculus.GRCm38.91.chr.gtf'
+if not os.path.exists(MOUSE_GTF):
+    print 'please unzip Mus_musculus.GRCm38.91.chr.gtf.gz first'
+    sys.exit(0)
 REVERSE_COMPLIMENT_TAB = string.maketrans("ACTG", "TGAC")
 
 def fetch_seq(seq_fetch_obj, chrom, start, end, strand):
@@ -57,24 +65,30 @@ def get_stop_codon_pos(seq):
         return seq.index('TGA'), 'TGA'
 
 def get_intron_PTC():
+    ## Our annotation is based on whole transcript reading frame.
+    ## We investigate the effect of intron per transcript. 
     U_Intron_List = []
-    fp = open('U_intron.list.txt')
-    for line in fp:
-        U_Intron_List.append(line.strip())
-    fp.close()
+    # get U introns from clustering results in step 2
+    for cell in ['ESC', 'NPC', 'Ctx']:
+        fp = open(CURRENT_DIR + '../xmeans_cluster_U_intron_2/{}.cluster.polyA.txt'.format(cell))
+        fp.readline()
+        for line in fp:
+            sp = line.strip().split('\t')
+            U_Intron_List.append(sp[-1])
+        fp.close()
+    U_Intron_List = list(set(U_Intron_List))
 
     CHROM_INDEX_LIST = ['chr' + str(x) for x in xrange(1, 20)] + ['chrX']
     seq_fetch_obj = FastaFile(MM10_FASTQ)
     dict_transcript_cds = get_transcript_cds()
     intron_id2transcripts = {}
-    fp = open('Intron_transcript.txt')
+    fp = open(DATA_DIR + 'Intron_transcript.txt')
     for line in fp:
         sp = line.strip().split('\t')
         intron_id2transcripts[sp[0]] = sp[1:]
     fp.close()
 
-    
-    fw = open('Intron_PTC_results.txt', 'w')
+    fw = open(CURRENT_DIR + 'Intron_PTC_results.txt', 'w')
     fw.write('SIRI_ID\tTranscript_ID\tPTC\n')
     for intron_id in tqdm(U_Intron_List, total = len(U_Intron_List)):
         transcript_list = intron_id2transcripts[intron_id]
@@ -126,8 +140,8 @@ def get_intron_PTC():
                         cds_intron_seq += fetch_seq(seq_fetch_obj, chrom, start, end, strand)
             if check_stop_codon(cds_seq):
                 continue
+            ## if intron is last intron, it would not cause NMD.
             if intron_id == last_intron:
-                fw.write('{}\t{}\t{}\n'.format(intron_id, transcript, 'False'))
                 continue
             ptc_flag = False
             if check_stop_codon(cds_intron_seq):
@@ -147,4 +161,50 @@ def get_intron_PTC():
                 fw.write('{}\t{}\t{}\n'.format(intron_id, transcript, 'False'))
     fw.close()
 
-get_intron_PTC()
+def analyze_intron_cluster_ptc():
+    dict_ptc_info = defaultdict(lambda:[])
+    fp = open(CURRENT_DIR + 'Intron_PTC_results.txt')
+    fp.readline()
+    for line in fp:
+        sp = line.strip().split('\t')
+        dict_ptc_info[sp[0]].append((sp[1], sp[2]))
+    fp.close()
+
+    fw = open(CURRENT_DIR + 'ptc_response_xmeans.txt', 'w')
+    fw.write('cell\tcategory\tproportion\ttype\n')
+    for c_index, cell_name in enumerate(['ESC', 'NPC', 'Ctx']):
+        fp = open(CURRENT_DIR + '../xmeans_cluster_U_intron_2/{}.cluster.polyA.txt'.format(cell_name))
+        fp.readline()
+        cluster = {}
+        for line in fp:
+            sp = line.strip().split('\t')
+            cluster[sp[-1]] = sp[1].split(':')[0]
+        fp.close()
+        cluster_name_list = set(cluster.values())
+        for cluster_name in sorted(cluster_name_list):
+            ptc_count, no_ptc_count = 0, 0
+            for intron in cluster:
+                if cluster[intron] != cluster_name:
+                    continue
+                if intron not in dict_ptc_info:
+                    continue
+                ptc_flag = False
+                for ptc_info in dict_ptc_info[intron]:
+                    txID, ptc = ptc_info[0], ptc_info[1]
+                    if ptc == 'True':
+                        ptc_flag = True
+                if ptc_flag:
+                    ptc_count += 1
+                else:
+                    no_ptc_count += 1
+            #print cell_name, cluster_name, ptc_count, no_ptc_count, ptc_count / (ptc_count + no_ptc_count + 0.0)
+            fw.write('{}\t{}\t{}\t{}\n'.format(cell_name, cluster_name, ptc_count / (ptc_count + no_ptc_count + 0.0), '+ PTC'))
+            fw.write('{}\t{}\t{}\t{}\n'.format(cell_name, cluster_name, no_ptc_count / (ptc_count + no_ptc_count + 0.0), '- PTC'))
+    fw.close()
+
+def main():
+    get_intron_PTC()
+    analyze_intron_cluster_ptc()
+
+if __name__=="__main__":
+    main()

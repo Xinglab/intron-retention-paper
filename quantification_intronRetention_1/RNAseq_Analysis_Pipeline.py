@@ -1,9 +1,10 @@
 import os
 from subprocess import *
 
-TARGET_DIR = '/path/to/directory/' # the directory of storing the results of star mapping, kallisto and intron retention quantification
+#TARGET_DIR = '/path/to/directory/' # the directory of storing the results of star mapping, kallisto and intron retention quantification
 SIRI_cmd = os.path.abspath(__file__) + '/SIRI/bin/SIRI'
-## For more about SIRI, please refer to https://github.com/Xinglab/siri
+STARmm10 = '/path/to/directory/' # the path for the STAR index
+KALLISTO_INDEX = '/path/to/file' # the path for the Kallisto index
 
 def makedirs(_dir):
     try:

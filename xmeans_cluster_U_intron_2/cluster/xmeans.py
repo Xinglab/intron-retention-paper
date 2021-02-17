@@ -40,7 +40,7 @@ from pyclustering.cluster.encoder import type_encoding;
 
 import pyclustering.core.xmeans_wrapper as wrapper;
 
-from pyclustering.utils import euclidean_distance_sqrt, euclidean_distance;
+#from pyclustering.utils import euclidean_distance_sqrt, euclidean_distance;
 from pyclustering.utils import list_math_addition_number, list_math_addition, list_math_division_number;
 
 #def euclidean_distance_sqrt(a, b):
