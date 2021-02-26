@@ -72,7 +72,7 @@ def generate_black_list():
     fw.close()
 
 def get_intron_cluster(Chr_index, Nuc_index, Cyto_index, cell_type, experiment, READ_THRESHOLD = 20):
-    print 'parsing cell type {}, experiment {}'.format(cell_type, experiment)
+    print('parsing cell type {}, experiment {}'.format(cell_type, experiment))
     intron_info_list = read_file(DATA_DIR + 'intron_FI_combined_results.txt')
     black_list_intron = set(read_file(CURRENT_DIR + 'black_list_intron.txt'))
     X = []
@@ -106,16 +106,16 @@ def get_intron_cluster(Chr_index, Nuc_index, Cyto_index, cell_type, experiment, 
         intron_id2gene[sp[0]] = sp[1]
     X = np.array(X)
 
-    print '...initial {} clusters'.format(2)
+    print('...initial {} clusters'.format(2))
     initial_centers = xmeans.kmeans_plusplus_initializer(X, 2).initialize()
     xmeans_instance = xmeans.xmeans(X, initial_centers)
-    print '...run xmeans'
+    print('...run xmeans')
     xmeans_instance.process()
-    print '...get clusters'
+    print('...get clusters')
     clusters = xmeans_instance.get_clusters()
-    print '...cluster num {}'.format(len(clusters))
+    print('...cluster num {}'.format(len(clusters)))
 
-    print '...saving to current directory'
+    print('...saving to current directory')
     fw = open(CURRENT_DIR + '{}.cluster.{}.txt'.format(cell_type, experiment), 'w')
     fw.write('Cell_Compartment\tCluster\tFI\tSIRI_ID\n')
     values = [np.mean(X[clusters[x]][:,0]) for x in range(len(clusters))]
@@ -127,7 +127,7 @@ def get_intron_cluster(Chr_index, Nuc_index, Cyto_index, cell_type, experiment, 
             fw.write('Chr\t{}\t{}\t{}\n'.format(cluster_name[index] + ': ' + str(len(cluster)), X[_c][0], intron_id[_c]))
             fw.write('Nuc\t{}\t{}\t{}\n'.format(cluster_name[index] + ': ' + str(len(cluster)), X[_c][1], intron_id[_c]))
             fw.write('Cyto\t{}\t{}\t{}\n'.format(cluster_name[index] + ': ' + str(len(cluster)), X[_c][2], intron_id[_c]))
-        print '...{}'.format(cluster_name[index] + ' ' + str(len(cluster)))
+        print('...{}'.format(cluster_name[index] + ' ' + str(len(cluster))))
         cluster_name_list.append(cluster_name[index] + '\\n ' + str(len(cluster)))
     fw.close()
 

@@ -216,7 +216,7 @@ class xmeans:
             self.__clusters = [];
             while ( len(self.__centers) < self.__kmax ):
                 current_cluster_number = len(self.__centers);
-                print '...current_cluster_number : {}'.format(current_cluster_number)
+                print('...current_cluster_number : {}'.format(current_cluster_number))
                 (self.__clusters, self.__centers) = self.__improve_parameters(self.__centers);
                 allocated_centers = self.__improve_structure(self.__clusters, self.__centers);
                 
@@ -468,7 +468,7 @@ class xmeans:
                 # BIC calculation
                 scores[index_cluster] = L - p * 0.5 * log(N);
                 
-        print '...clusters : {}, scores : {}'.format(len(clusters), sum(scores))        
+        print('...clusters : {}, scores : {}'.format(len(clusters), sum(scores)))
         return sum(scores);
  
  
