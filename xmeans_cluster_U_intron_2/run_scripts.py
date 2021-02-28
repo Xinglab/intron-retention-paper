@@ -16,7 +16,7 @@ Chr_index, Nuc_index, Cyto_index = xmeans_cluster.POLYA_SAMPLE_INDEX[1]
 cell_name = xmeans_cluster.CELL_TYPE[1]
 xmeans_cluster.get_intron_cluster(Chr_index, Nuc_index, Cyto_index, cell_name, 'polyA')
 
-# run xmeans cluster for Ctx\n",
+# run xmeans cluster for Ctx"
 Chr_index, Nuc_index, Cyto_index = xmeans_cluster.POLYA_SAMPLE_INDEX[2]
 cell_name = xmeans_cluster.CELL_TYPE[2]
 xmeans_cluster.get_intron_cluster(Chr_index, Nuc_index, Cyto_index, cell_name, 'polyA')
