@@ -1,10 +1,22 @@
 import os
 from subprocess import *
 
-#TARGET_DIR = '/path/to/directory/' # the directory of storing the results of star mapping, kallisto and intron retention quantification
-SIRI_cmd = os.path.abspath(__file__) + '/SIRI/bin/SIRI'
-STARmm10 = '/path/to/directory/' # the path for the STAR index
-KALLISTO_INDEX = '/path/to/file' # the path for the Kallisto index
+PARENT_DIR='/path/to/intron-retention-paper'
+BASE_DIR='{}/quantification_intronRetention_1'.format(PARENT_DIR)
+
+# the directory of storing the results:
+# star mapping: TARGET_DIR/{tissue}/{sample}/
+# kallisto: TARGET_DIR/{tissue}/{sample}/
+# intron retention quantification: TARGET_DIR/{tissue}/{sample}/
+TARGET_DIR = '{}/results/'.format(BASE_DIR) # (trailing slash)
+# directory of fastq files: DATA_DIR/{tissue}/fastq/{sample}_{1,2}.fastq
+DATA_DIR = '{}/data/'.format(BASE_DIR) # (trailing slash)
+SIRI_cmd = os.path.dirname(os.path.abspath(__file__)) + '/SIRI/bin/SIRI'
+STARmm10 = '{}/star_index/'.format(BASE_DIR) # the path for the STAR index (trailing slash)
+KALLISTO_INDEX = '{}/Mus_musculus.GRCm38.cdna.all.fa.idx'.format(BASE_DIR) # the path for the Kallisto index
+GTF_FILE = '{}/data/Mus_musculus.GRCm38.91.chr.gtf'.format(PARENT_DIR) # the path for the GTF file
+tissue = 'mESC'
+sample = 'Chr'
 
 def makedirs(_dir):
     try:
@@ -36,8 +48,8 @@ def run_star(tissue, sample): # run STAR mapping
 
 def run_kallisto(tissue, sample): # run Kallisto, gene expression quantification
     os.chdir(TARGET_DIR + tissue + '/' + sample)
-    fastq_1 = DATA_DIR + tissue + '/fastq/' + sample + '_1.fastq.gz'
-    fastq_2 = DATA_DIR + tissue + '/fastq/' + sample + '_2.fastq.gz'
+    fastq_1 = DATA_DIR + tissue + '/fastq/' + sample + '_1.fastq'
+    fastq_2 = DATA_DIR + tissue + '/fastq/' + sample + '_2.fastq'
     fastq_files = fastq_1 + ' ' + fastq_2
     makedirs('kallisto')
     os.chdir(TARGET_DIR + tissue + '/' + sample + '/kallisto')
@@ -47,15 +59,16 @@ def run_kallisto(tissue, sample): # run Kallisto, gene expression quantification
 def run_SIRI(tissue, sample): # run SIRI, intron retention quantification
     os.chdir(TARGET_DIR + tissue + '/' + sample)
     bam_file = TARGET_DIR + tissue + '/' + sample + '/Aligned.sortedByCoord.out.bam'
-    read_length = get_length(bam_file)
+    out_dir = './siri_out'
+    read_length = get_bam_length(bam_file)
     cmd = '{} ' \
           '--bam_files {} ' \
           '--gtf {} ' \
-          '--anchor 8 --length {} --lib first --read P'.format(SIRI_cmd, bam_file, GTF_FILE, read_length)
+          '--anchor 8 --length {} --lib first --read P ' \
+          '--output {}'.format(SIRI_cmd, bam_file, GTF_FILE, read_length,
+                               out_dir)
     call(cmd, shell=True)
 
-tissue = 'mESC'
-sample = 'Chr'
 run_star(tissue, sample)
 run_kallisto(tissue, sample)
 run_SIRI(tissue, sample)
