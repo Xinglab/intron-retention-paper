@@ -32,6 +32,7 @@ The code is provided without a warranty. Codes from parts of the analysis are re
 * `conda install -c conda-forge -c bioconda python=2 r-base=4 sra-tools star kallisto samtools=1.11 pysam=0.16.0 numpy=1.15.4 tqdm keras scikit-learn h5py r-rtsne r-ggplot2 r-ggthemes r-scales r-ggpubr`
 * `R`
 * `pip install pyclustering`
+* `pip install -U matplotlib`
 * `> repos <- "http://cran.us.r-project.org"`
 * `> install.packages("circlize", repos=repos)`
 * `> quit()`
