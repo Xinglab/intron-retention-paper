@@ -140,7 +140,7 @@ def get_intron_PTC():
                         cds_intron_seq += fetch_seq(seq_fetch_obj, chrom, start, end, strand)
             if check_stop_codon(cds_seq):
                 continue
-            ## if intron is last intron, it would not cause NMD.
+            ## if intron is last intron, it would not cause NMD. We skip intron if it is the last intron of the transcript.
             if intron_id == last_intron:
                 continue
             ptc_flag = False
@@ -150,7 +150,7 @@ def get_intron_PTC():
                 intron_junc_dis = cds_intron_seq.index(intron_seq) + end - start - pos * 3 - 3
                 if intron_junc_dis < 0:
                     continue
-                if second_last_intron == intron_id:
+                if second_last_intron == intron_id: ## 50nt PTC rule
                     if intron_junc_dis + exon_list[-2][1] - exon_list[-2][0] >= 50:
                         ptc_flag = True
                 else:
