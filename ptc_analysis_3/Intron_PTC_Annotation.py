@@ -197,7 +197,6 @@ def analyze_intron_cluster_ptc():
                     ptc_count += 1
                 else:
                     no_ptc_count += 1
-            #print cell_name, cluster_name, ptc_count, no_ptc_count, ptc_count / (ptc_count + no_ptc_count + 0.0)
             fw.write('{}\t{}\t{}\t{}\n'.format(cell_name, cluster_name, ptc_count / (ptc_count + no_ptc_count + 0.0), '+ PTC'))
             fw.write('{}\t{}\t{}\t{}\n'.format(cell_name, cluster_name, no_ptc_count / (ptc_count + no_ptc_count + 0.0), '- PTC'))
     fw.close()
