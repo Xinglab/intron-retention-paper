@@ -70,7 +70,7 @@ Run
 
 Output: cluster.png should look like what is shown in the .ipynb
 
-* `conda activate ./conda_env_py3`
+* `conda activate ./conda_env_py2`
 * `cd xmeans_cluster_U_intron_2`
 * `python run_scripts.py`
 * `conda deactivate`
