@@ -31,13 +31,10 @@ The code is provided without a warranty. Codes from parts of the analysis are re
 * `conda activate ./conda_env_py2`
 * `conda install -c conda-forge -c bioconda python=2 r-base=4 sra-tools star kallisto samtools=1.11 pysam=0.16.0 numpy=1.15.4 tqdm keras scikit-learn h5py r-rtsne r-ggplot2 r-ggthemes r-scales r-ggpubr`
 * `R`
+* `pip install pyclustering`
 * `> repos <- "http://cran.us.r-project.org"`
 * `> install.packages("circlize", repos=repos)`
 * `> quit()`
-* `conda deactivate`
-* `conda create --prefix ./conda_env_py3`
-* `conda activate ./conda_env_py3`
-* `conda install -c conda-forge -c bioconda python=3 r-base=4 numpy scipy pyclustering r-ggplot2 r-ggthemes r-scales r-ggpubr`
 * `conda deactivate`
 
 ## `quantification_intronRetention_1`
