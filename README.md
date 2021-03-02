@@ -41,6 +41,11 @@ The code is provided without a warranty. Codes from parts of the analysis are re
 
 ## `quantification_intronRetention_1`
 
+Output: One example of output should look like
+        ./results/mESC/Chr/Aligned.sortedByCoord.out.bam (RNA-seq alignments)
+        ./results/mESC/Chr/kallisto/abundance.tsv (Gene expression)
+        ./results/mESC/Chr/siri_out (Quantification of the levels of intron retentions)
+ 
 Download fastq files
 
 * `conda activate ./conda_env_py2`
